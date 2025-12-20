@@ -37,6 +37,12 @@ public class TranslationHistory {
     @Column(name = "target_language", length = 10)
     private String targetLanguage; // e.g., "vi" for Vietnamese
 
+    @Column(name = "user_context", columnDefinition = "TEXT")
+    private String userContext; // Context provided by user
+
+    @Column(name = "context_analysis", columnDefinition = "TEXT")
+    private String contextAnalysis; // AI analysis of context
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

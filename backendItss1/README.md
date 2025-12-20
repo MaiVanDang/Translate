@@ -142,23 +142,117 @@ Content-Type: application/json
 
 {
   "currentPassword": "old_password",
-  "newPassword": "new_password"
+  "newPassword": "new_password",
+  "confirmPassword": "new_password"
 }
 ```
 
 **Response 200:**
 ```json
 {
-  "message": "Password changed successfully!"
+  "message": "Đổi mật khẩu thành công!"
 }
 ```
 
 **Response 400:**
 ```json
 {
-  "message": "Error: Current password is incorrect!"
+  "message": "Error: Mật khẩu hiện tại không đúng."
+}
+// hoặc
+{
+  "message": "Error: Mật khẩu mới và xác nhận mật khẩu không khớp."
+}
+// hoặc
+{
+  "message": "Error: Mật khẩu mới phải khác với mật khẩu hiện tại."
+}
+// hoặc
+{
+  "message": "Error: Tài khoản đăng nhập qua Google/Facebook không thể đổi mật khẩu."
 }
 ```
+
+**Response 401:**
+```json
+{
+  "message": "Error: Vui lòng đăng nhập để đổi mật khẩu."
+}
+```
+
+**⚠️ Lưu ý:** Tài khoản đăng nhập qua Google/Facebook không thể đổi mật khẩu.
+
+### 3.1. Quên mật khẩu - Kiểm tra Email
+
+```http
+POST /api/auth/check-email
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+```
+
+**Response 200 (Email tồn tại và là tài khoản thường):**
+```json
+{
+  "exists": true,
+  "message": "Email tồn tại trong hệ thống."
+}
+```
+
+**Response 200 (Email là tài khoản OAuth2):**
+```json
+{
+  "exists": false,
+  "message": "Tài khoản này đăng nhập qua Google/Facebook, không thể đặt lại mật khẩu."
+}
+```
+
+**Response 200 (Email không tồn tại):**
+```json
+{
+  "exists": false,
+  "message": "Email không tồn tại trong hệ thống."
+}
+```
+
+### 3.2. Đặt lại mật khẩu
+
+```http
+POST /api/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "newPassword": "new_password",
+  "confirmPassword": "new_password"
+}
+```
+
+**Response 200:**
+```json
+{
+  "message": "Đặt lại mật khẩu thành công!"
+}
+```
+
+**Response 400:**
+```json
+{
+  "message": "Error: Email không tồn tại trong hệ thống."
+}
+// hoặc
+{
+  "message": "Error: Tài khoản đăng nhập qua Google/Facebook không thể đặt lại mật khẩu."
+}
+// hoặc
+{
+  "message": "Error: Mật khẩu mới và xác nhận mật khẩu không khớp."
+}
+```
+
+**⚠️ Lưu ý:** Tài khoản đăng nhập qua Google/Facebook không thể đặt lại mật khẩu.
 
 ### 4. OAuth2 Login
 
@@ -179,18 +273,61 @@ Content-Type: application/json
 
 {
   "text": "こんにちは",
-  "sourceLang": "ja",
-  "targetLang": "vi"
+  "context": "Đây là lời chào trong email công việc"
 }
 ```
 
 **Response 200:**
 ```json
 {
-  "translatedText": "Xin chào",
-  "sourceLang": "ja",
-  "targetLang": "vi"
+  "success": true,
+  "original": "こんにちは",
+  "translated": "Xin chào",
+  "contextAnalysis": "Đây là một lời chào phổ biến trong tiếng Nhật, thích hợp cho cả giao tiếp chính thức và thân mật. Trong ngữ cảnh email công việc, nên dùng 'おはようございます' (Ohayou gozaimasu) buổi sáng hoặc 'こんにちは' (Konnichiwa) buổi chiều để thể hiện sự lịch sự.",
+  "username": "user@example.com",
+  "message": "Dịch thành công"
 }
+```
+
+### 6. Lấy lịch sử dịch (Protected)
+
+```http
+GET /api/translate/history?page=0&size=10
+Authorization: Bearer <your-jwt-token>
+```
+
+**Response 200:**
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "originalText": "こんにちは",
+      "translatedText": "Xin chào",
+      "userContext": "Đây là lời chào trong email công việc",
+      "contextAnalysis": "Đây là một lời chào phổ biến...",
+      "sourceLanguage": "ja",
+      "targetLanguage": "vi",
+      "createdAt": "2025-12-20T10:30:00"
+    }
+  ],
+  "totalElements": 50,
+  "totalPages": 5,
+  "size": 10,
+  "number": 0
+}
+```
+
+### 7. Xóa lịch sử dịch (Protected)
+
+```http
+DELETE /api/translate/history
+Authorization: Bearer <your-jwt-token>
+```
+
+**Response 200:**
+```
+Đã xóa lịch sử dịch thành công
 ```
 
 ---
@@ -364,6 +501,8 @@ server.port=8081
 | user_id | BIGINT | Foreign key to users |
 | original_text | TEXT | Original text |
 | translated_text | TEXT | Translated text |
+| user_context | TEXT | Context provided by user |
+| context_analysis | TEXT | AI analysis of context |
 | source_language | VARCHAR(10) | e.g., "ja" |
 | target_language | VARCHAR(10) | e.g., "vi" |
 | created_at | TIMESTAMP | Auto set on create |

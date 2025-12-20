@@ -9,7 +9,8 @@ import java.util.List;
 public interface TranslationHistoryService {
 
     TranslationHistory saveTranslationHistory(User user, String originalText, String translatedText,
-                                             String sourceLanguage, String targetLanguage);
+                                             String sourceLanguage, String targetLanguage,
+                                             String userContext, String contextAnalysis);
 
     List<TranslationHistory> getUserTranslationHistory(Long userId);
 

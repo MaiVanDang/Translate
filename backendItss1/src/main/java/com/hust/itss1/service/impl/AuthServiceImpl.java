@@ -1,5 +1,6 @@
 package com.hust.itss1.service.impl;
 
+import com.hust.itss1.dto.request.ChangePasswordRequest;
 import com.hust.itss1.dto.request.ForgotPasswordRequest;
 import com.hust.itss1.dto.request.LoginRequest;
 import com.hust.itss1.dto.request.ResetPasswordRequest;
@@ -73,6 +74,11 @@ public class AuthServiceImpl implements AuthService {
     public EmailCheckResponse checkEmailExists(ForgotPasswordRequest request) {
         boolean exists = userRepository.existsByEmail(request.getEmail());
         if (exists) {
+            // Kiểm tra nếu là tài khoản OAuth2
+            User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+            if (user != null && user.getProviderId() != null && !user.getProviderId().isEmpty()) {
+                return new EmailCheckResponse(false, "Tài khoản này đăng nhập qua Google/Facebook, không thể đặt lại mật khẩu.");
+            }
             return new EmailCheckResponse(true, "Email tồn tại trong hệ thống.");
         } else {
             return new EmailCheckResponse(false, "Email không tồn tại trong hệ thống.");
@@ -86,19 +92,59 @@ public class AuthServiceImpl implements AuthService {
             return new MessageResponse("Error: Email không tồn tại trong hệ thống.");
         }
 
+        // Lấy thông tin user
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Kiểm tra nếu là tài khoản OAuth2 (Google/Facebook)
+        if (user.getProviderId() != null && !user.getProviderId().isEmpty()) {
+            return new MessageResponse("Error: Tài khoản đăng nhập qua Google/Facebook không thể đặt lại mật khẩu.");
+        }
+
         // Kiểm tra mật khẩu mới và xác nhận mật khẩu có khớp không
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             return new MessageResponse("Error: Mật khẩu mới và xác nhận mật khẩu không khớp.");
         }
 
         // Cập nhật mật khẩu mới
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
         user.setPassword(encoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
         return new MessageResponse("Đặt lại mật khẩu thành công!");
+    }
+
+    @Override
+    public MessageResponse changePassword(Long userId, ChangePasswordRequest request) {
+        // Lấy thông tin user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Kiểm tra nếu là tài khoản OAuth2 (Google/Facebook)
+        if (user.getProviderId() != null && !user.getProviderId().isEmpty()) {
+            return new MessageResponse("Error: Tài khoản đăng nhập qua Google/Facebook không thể đổi mật khẩu.");
+        }
+
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu có khớp không
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            return new MessageResponse("Error: Mật khẩu mới và xác nhận mật khẩu không khớp.");
+        }
+
+
+        // Kiểm tra mật khẩu hiện tại có đúng không
+        if (!encoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            return new MessageResponse("Error: Mật khẩu hiện tại không đúng.");
+        }
+
+        // Kiểm tra mật khẩu mới không được trùng với mật khẩu cũ
+        if (encoder.matches(request.getNewPassword(), user.getPassword())) {
+            return new MessageResponse("Error: Mật khẩu mới phải khác với mật khẩu hiện tại.");
+        }
+
+        // Cập nhật mật khẩu mới
+        user.setPassword(encoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        return new MessageResponse("Đổi mật khẩu thành công!");
     }
 }
 

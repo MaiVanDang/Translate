@@ -21,6 +21,8 @@ const translations = {
         email: 'Email',
         password: 'Mật khẩu',
         loginButton: 'Đăng nhập',
+        loggingIn: 'Đang đăng nhập...',
+        forgotPassword: 'Quên mật khẩu?',
         noAccount: 'Chưa có tài khoản?',
         signupNow: 'Đăng ký ngay',
         or: 'HOẶC',
@@ -30,6 +32,7 @@ const translations = {
         // Signup
         signup: 'Đăng ký',
         signupButton: 'Đăng ký',
+        signingUp: 'Đang đăng ký...',
         haveAccount: 'Đã có tài khoản?',
         loginNow: 'Đăng nhập ngay',
 
@@ -38,8 +41,17 @@ const translations = {
         vietnamese: 'Tiếng Việt',
         translate: 'Dịch',
         translating: 'Đang dịch...',
-        inputPlaceholder: 'こんにちは、元気ですか？',
-        outputPlaceholder: 'Kết quả dịch sẽ hiển thị ở đây...',
+        context: 'Ngữ cảnh',
+        analysis: 'Phân tích',
+        inputPlaceholder: 'Nhập văn bản tiếng Nhật cần dịch...',
+        outputPlaceholder: 'Kết quả dịch sẽ hiển thị tại đây...',
+        contextPlaceholder: 'Nhập ngữ cảnh của câu nói (không bắt buộc)...',
+        analysisPlaceholder: 'Phân tích ngữ cảnh sẽ hiển thị tại đây...',
+        translationHistory: 'Lịch sử dịch',
+        show: 'Hiện',
+        hide: 'Ẩn',
+        loadingHistory: 'Đang tải lịch sử...',
+        noHistory: 'Chưa có lịch sử dịch',
 
         // Home
         homeTitle: 'Dịch Nhật - Việt với AI',
@@ -80,6 +92,8 @@ const translations = {
         email: 'メール',
         password: 'パスワード',
         loginButton: 'ログイン',
+        loggingIn: 'ログイン中...',
+        forgotPassword: 'パスワードを忘れた？',
         noAccount: 'アカウントをお持ちでないですか？',
         signupNow: '今すぐ登録',
         or: 'または',
@@ -89,6 +103,7 @@ const translations = {
         // Signup
         signup: '登録',
         signupButton: '登録',
+        signingUp: '登録中...',
         haveAccount: 'アカウントをお持ちですか？',
         loginNow: '今すぐログイン',
 
@@ -97,8 +112,17 @@ const translations = {
         vietnamese: 'ベトナム語',
         translate: '翻訳',
         translating: '翻訳中...',
-        inputPlaceholder: 'こんにちは、元気ですか？',
+        context: 'コンテキスト',
+        analysis: '分析',
+        inputPlaceholder: '翻訳したい日本語のテキストを入力...',
         outputPlaceholder: '翻訳結果がここに表示されます...',
+        contextPlaceholder: '文脈を入力（オプション）...',
+        analysisPlaceholder: 'コンテキスト分析がここに表示されます...',
+        translationHistory: '翻訳履歴',
+        show: '表示',
+        hide: '非表示',
+        loadingHistory: '履歴を読み込んでいます...',
+        noHistory: '翻訳履歴がありません',
 
         // Home
         homeTitle: '日本語 - ベトナム語 AI翻訳',
@@ -139,6 +163,8 @@ const translations = {
         email: 'Email',
         password: 'Password',
         loginButton: 'Login',
+        loggingIn: 'Logging in...',
+        forgotPassword: 'Forgot password?',
         noAccount: "Don't have an account?",
         signupNow: 'Sign up now',
         or: 'OR',
@@ -148,6 +174,7 @@ const translations = {
         // Signup
         signup: 'Sign Up',
         signupButton: 'Sign Up',
+        signingUp: 'Signing up...',
         haveAccount: 'Already have an account?',
         loginNow: 'Login now',
 
@@ -156,8 +183,17 @@ const translations = {
         vietnamese: 'Vietnamese',
         translate: 'Translate',
         translating: 'Translating...',
-        inputPlaceholder: 'こんにちは、元気ですか？',
+        context: 'Context',
+        analysis: 'Analysis',
+        inputPlaceholder: 'Enter Japanese text to translate...',
         outputPlaceholder: 'Translation result will appear here...',
+        contextPlaceholder: 'Enter context (optional)...',
+        analysisPlaceholder: 'Context analysis will appear here...',
+        translationHistory: 'Translation History',
+        show: 'Show',
+        hide: 'Hide',
+        loadingHistory: 'Loading history...',
+        noHistory: 'No translation history',
 
         // Home
         homeTitle: 'Japanese - Vietnamese AI Translation',

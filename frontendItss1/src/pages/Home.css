@@ -28,6 +28,7 @@
     background: rgba(255, 255, 255, 0.1);
     color: var(--home-text, white);
     font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     backdrop-filter: blur(10px);
     transition: all 0.2s;
@@ -35,6 +36,21 @@
 
 .lang-select:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+.lang-select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Style cho các option trong dropdown */
+.lang-select option {
+    background: #ffffff;
+    color: #1e293b;
+    font-weight: 500;
+    padding: 8px;
+    font-size: 14px;
 }
 
 .theme-toggle {
@@ -233,6 +249,12 @@
 [data-theme="dark"] .theme-toggle {
     border-color: rgba(255, 255, 255, 0.2);
     background: rgba(45, 55, 72, 0.6);
+}
+
+/* Dark mode options vẫn dùng nền trắng với text tối để dễ đọc */
+[data-theme="dark"] .lang-select option {
+    background: #ffffff;
+    color: #1e293b;
 }
 
 /* Responsive */

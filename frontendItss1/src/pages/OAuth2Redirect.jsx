@@ -23,16 +23,25 @@ function OAuth2Redirect() {
       const email = searchParams.get('email');
       let displayName = email || 'Người dùng';
 
-      // Nếu là Facebook (@facebook.com) thì chỉ hiển thị tên, còn Google thì giữ nguyên email
+      // Xác định provider dựa trên email
+      let provider = 'email'; // default
       if (email && email.includes('@facebook.com')) {
         displayName = email.split('@')[0];
+        provider = 'facebook';
+      } else if (email && email.includes('@gmail.com')) {
+        provider = 'google';
       }
 
       const userData = {
         email: displayName,
         id: null,
-        roles: ['ROLE_USER']
+        roles: ['ROLE_USER'],
+        provider: provider // Thêm provider để frontend biết loại tài khoản
       };
+
+      // Lưu loginMethod để dễ kiểm tra
+      localStorage.setItem('loginMethod', provider);
+
       login(userData, token);
       navigate('/translate');
     } else {

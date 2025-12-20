@@ -1,16 +1,14 @@
 // src/pages/Home.jsx
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { useTheme } from '../context/ThemeContext';
 import './Home.css';
 
 function Home() {
     const { t, language, setLanguage } = useLanguage();
-    const { theme, toggleTheme } = useTheme();
 
     return (
         <div className="home-container">
-            {/* Header with language and theme controls */}
+            {/* Header with language controls */}
             <header className="home-header">
                 <div className="header-controls">
                     <select
@@ -22,9 +20,6 @@ function Home() {
                         <option value="ja">🇯🇵 日本語</option>
                         <option value="en">🇬🇧 English</option>
                     </select>
-                    <button onClick={toggleTheme} className="theme-toggle">
-                        {theme === 'light' ? '🌙' : '☀️'}
-                    </button>
                 </div>
             </header>
 
@@ -70,7 +65,7 @@ function Home() {
 
             {/* Footer */}
             <footer className="home-footer">
-                <p>© 2024 JP ↔️ VN AI Translator</p>
+                <p>©2025 JP ↔️ VN AI Translator</p>
             </footer>
         </div>
     );

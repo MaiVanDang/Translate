@@ -21,13 +21,16 @@ public class TranslationHistoryServiceImpl implements TranslationHistoryService 
     @Override
     @Transactional
     public TranslationHistory saveTranslationHistory(User user, String originalText, String translatedText,
-                                                     String sourceLanguage, String targetLanguage) {
+                                                     String sourceLanguage, String targetLanguage,
+                                                     String userContext, String contextAnalysis) {
         TranslationHistory history = TranslationHistory.builder()
                 .user(user)
                 .originalText(originalText)
                 .translatedText(translatedText)
                 .sourceLanguage(sourceLanguage)
                 .targetLanguage(targetLanguage)
+                .userContext(userContext)
+                .contextAnalysis(contextAnalysis)
                 .build();
 
         return translationHistoryRepository.save(history);

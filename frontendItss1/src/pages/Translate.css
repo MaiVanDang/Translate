@@ -430,7 +430,24 @@
 
 .history-content {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-original,
+.history-translated,
+.history-context {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.history-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 70px;
+  flex-shrink: 0;
 }
 
 .history-text {
@@ -439,6 +456,13 @@
   line-height: 1.5;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  flex: 1;
+}
+
+.history-context .history-text {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 13px;
 }
 
 @media (max-width: 640px) {

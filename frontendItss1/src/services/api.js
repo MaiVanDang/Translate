@@ -1,7 +1,7 @@
 // src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8081';
+const API_BASE_URL = 'http://localhost:8080';
 
 // Tạo axios instance
 const api = axios.create({
@@ -77,6 +77,9 @@ export const authAPI = {
 
   resetPassword: (email, newPassword, confirmPassword) =>
     api.post('/api/auth/reset-password', { email, newPassword, confirmPassword }),
+
+  changePassword: (currentPassword, newPassword, confirmPassword) =>
+    api.post('/api/auth/change-password', { currentPassword, newPassword, confirmPassword }),
 };
 
 // Translation API

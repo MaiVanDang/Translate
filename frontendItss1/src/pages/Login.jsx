@@ -5,6 +5,7 @@ import { Sun, Moon } from 'lucide-react';
 import { authAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 import './Auth.css';
 
 function Login() {
@@ -23,6 +24,7 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,8 +38,11 @@ function Login() {
       // Xóa error khi đăng nhập thành công
       setError('');
 
-      // Lưu thông tin user và token
-      login({ id, email: userEmail, roles }, token);
+      // Lưu loginMethod để phân biệt với OAuth2
+      localStorage.setItem('loginMethod', 'email');
+
+      // Lưu thông tin user và token với provider
+      login({ id, email: userEmail, roles, provider: 'email' }, token);
 
       // Đợi một chút để đảm bảo state được update
       setTimeout(() => {
@@ -117,13 +122,13 @@ function Login() {
   return (
     <div className="auth-container">
       {/* Theme Toggle Button */}
-      <button className="theme-toggle" onClick={toggleTheme} title={theme === 'light' ? 'Chế độ tối' : 'Chế độ sáng'}>
+      <button className="theme-toggle" onClick={toggleTheme} title={theme === 'light' ? t('darkMode') : t('lightMode')}>
         {theme === 'light' ? <Moon /> : <Sun />}
       </button>
 
       <div className="auth-box">
-        <h1>🔐 Đăng nhập</h1>
-        <p className="subtitle">JP ↔️ VN AI Translator</p>
+        <h1>🔐 {t('login')}</h1>
+        <p className="subtitle">{t('appTitle')}</p>
 
         {error && (
           <div className="error-message">
@@ -132,7 +137,7 @@ function Login() {
               type="button"
               className="error-close-btn"
               onClick={() => setError('')}
-              aria-label="Đóng thông báo lỗi"
+              aria-label={t('cancel')}
             >
               ×
             </button>
@@ -141,7 +146,7 @@ function Login() {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('email')}</label>
             <input
               type="email"
               id="email"
@@ -153,7 +158,7 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Mật khẩu</label>
+            <label htmlFor="password">{t('password')}</label>
             <input
               type="password"
               id="password"
@@ -165,7 +170,7 @@ function Login() {
           </div>
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            {loading ? t('loggingIn') : t('loginButton')}
           </button>
         </form>
 
@@ -175,25 +180,25 @@ function Login() {
             className="forgot-password-link"
             onClick={() => setShowForgotPassword(true)}
           >
-            Quên mật khẩu?
+            {t('forgotPassword')}
           </button>
         </div>
 
         <div className="divider">
-          <span>HOẶC</span>
+          <span>{t('or')}</span>
         </div>
 
         <div className="oauth-buttons">
           <button onClick={handleGoogleLogin} className="btn-google">
-            <span>🔍</span> Đăng nhập với Google
+            <span>🔍</span> {t('loginWithGoogle')}
           </button>
           <button onClick={handleFacebookLogin} className="btn-facebook">
-            <span>📘</span> Đăng nhập với Facebook
+            <span>📘</span> {t('loginWithFacebook')}
           </button>
         </div>
 
         <p className="auth-link">
-          Chưa có tài khoản? <Link to="/signup">Đăng ký ngay</Link>
+          {t('noAccount')} <Link to="/signup">{t('signupNow')}</Link>
         </p>
       </div>
 

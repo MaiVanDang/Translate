@@ -65,7 +65,9 @@ public class TranslationController {
             request.getText(),
             translationResult.getTranslation(),
             "ja", // Japanese
-            "vi"  // Vietnamese
+            "vi", // Vietnamese
+            request.getContext(),
+            translationResult.getContextAnalysis()
         );
 
         return ResponseEntity.ok(

@@ -1,7 +1,10 @@
 // src/pages/Signup.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Sun, Moon } from 'lucide-react';
 import { authAPI } from '../services/api';
+import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 import './Auth.css';
 
 function Signup() {
@@ -11,6 +14,8 @@ function Signup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,9 +49,14 @@ function Signup() {
 
   return (
     <div className="auth-container">
+      {/* Theme Toggle Button */}
+      <button className="theme-toggle" onClick={toggleTheme} title={theme === 'light' ? t('darkMode') : t('lightMode')}>
+        {theme === 'light' ? <Moon /> : <Sun />}
+      </button>
+
       <div className="auth-box">
-        <h1>📝 Đăng ký</h1>
-        <p className="subtitle">Tạo tài khoản mới</p>
+        <h1>📝 {t('signup')}</h1>
+        <p className="subtitle">{t('appTitle')}</p>
 
         {error && (
           <div className="error-message">
@@ -55,7 +65,7 @@ function Signup() {
               type="button"
               className="error-close-btn"
               onClick={() => setError('')}
-              aria-label="Đóng thông báo lỗi"
+              aria-label={t('cancel')}
             >
               ×
             </button>
@@ -64,7 +74,7 @@ function Signup() {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('email')}</label>
             <input
               type="email"
               id="email"
@@ -76,7 +86,7 @@ function Signup() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Mật khẩu</label>
+            <label htmlFor="password">{t('password')}</label>
             <input
               type="password"
               id="password"
@@ -89,7 +99,7 @@ function Signup() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+            <label htmlFor="confirmPassword">{t('confirmPassword')}</label>
             <input
               type="password"
               id="confirmPassword"
@@ -102,12 +112,12 @@ function Signup() {
           </div>
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Đang đăng ký...' : 'Đăng ký'}
+            {loading ? t('signingUp') : t('signupButton')}
           </button>
         </form>
 
         <p className="auth-link">
-          Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
+          {t('haveAccount')} <Link to="/login">{t('loginNow')}</Link>
         </p>
       </div>
     </div>

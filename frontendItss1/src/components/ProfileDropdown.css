@@ -1,6 +1,19 @@
 /* src/components/ProfileDropdown.css */
 .profile-dropdown {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-email-display {
+  font-size: 14px;
+  color: var(--text-primary, #333);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 .hamburger-menu {
@@ -9,6 +22,7 @@
   background: transparent;
   border: 2px solid var(--text-primary, #333);
   border-radius: 8px;
+  flex-shrink: 0;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -172,5 +186,10 @@
 @media (max-width: 768px) {
   .dropdown-menu {
     min-width: 260px;
+  }
+
+  .user-email-display {
+    max-width: 150px;
+    font-size: 13px;
   }
 }

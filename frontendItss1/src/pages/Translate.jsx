@@ -1,7 +1,6 @@
 // src/pages/Translate.jsx
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeftRight, LogOut, Maximize2, X, Sun, Moon, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeftRight, Maximize2, X, Eye, EyeOff } from 'lucide-react';
 import { translationAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -92,9 +91,24 @@ function Translate() {
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [expandedBox, setExpandedBox] = useState(null); // 'japanese' | 'context' | 'vietnamese' | 'analysis' | null
   const [historyHidden, setHistoryHidden] = useState(false);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { t } = useLanguage();
-  const navigate = useNavigate();
+
+  // Hàm làm sạch text từ markdown code blocks
+  const cleanTranslationText = (text) => {
+    if (!text) return '';
+
+    // Loại bỏ markdown code blocks (```vietnamese, ```text, ```json, v.v.)
+    let cleaned = text.replace(/```[a-z]*\n?/gi, '');
+
+    // Loại bỏ các dấu ``` còn sót lại
+    cleaned = cleaned.replace(/```/g, '');
+
+    // Trim whitespace ở đầu và cuối
+    cleaned = cleaned.trim();
+
+    return cleaned;
+  };
 
   const loadHistory = async () => {
     const token = localStorage.getItem('token');
@@ -150,8 +164,9 @@ function Translate() {
       const response = await translationAPI.translate(japaneseText, context);
       const { translated, contextAnalysis } = response.data;
 
-      setVietnameseText(translated);
-      setAnalysis(contextAnalysis || '');
+      // Làm sạch kết quả dịch và phân tích
+      setVietnameseText(cleanTranslationText(translated));
+      setAnalysis(cleanTranslationText(contextAnalysis || ''));
 
       // Reload history after successful translation
       loadHistory();
@@ -170,14 +185,11 @@ function Translate() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   const handleHistoryItemClick = (item) => {
     setJapaneseText(item.originalText || '');
     setVietnameseText(item.translatedText || '');
+    setContext(item.userContext || '');
+    setAnalysis(item.contextAnalysis || '');
     // Scroll to top để người dùng thấy nội dung đã được điền
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -188,25 +200,10 @@ function Translate() {
       <header className="translate-header">
         <div className="header-content">
           <div className="header-left">
-            <ArrowLeftRight className="header-icon" />
             <h1>JP ↔️ VN AI Translator</h1>
           </div>
           <div className="header-right">
-            <span className="user-email">{user?.email || 'user@example.com'}</span>
-            <button
-              onClick={toggleTheme}
-              className="btn-theme-toggle"
-              title={theme === 'light' ? 'Chế độ tối' : 'Chế độ sáng'}
-            >
-              {theme === 'light' ? <Moon className="theme-icon" /> : <Sun className="theme-icon" />}
-            </button>
-            <button
-              onClick={handleLogout}
-              className="btn-logout"
-            >
-              <LogOut className="logout-icon" />
-              <span>Đăng xuất</span>
-            </button>
+            <ProfileDropdown />
           </div>
         </div>
       </header>
@@ -218,19 +215,19 @@ function Translate() {
             {/* Left Side - Japanese Input */}
             <div className="input-group">
               <TextBoxWithExpand
-                label="Tiếng Nhật"
+                label={t('japanese')}
                 value={japaneseText}
                 onChange={(e) => setJapaneseText(e.target.value)}
-                placeholder="Nhập văn bản tiếng Nhật cần dịch..."
+                placeholder={t('inputPlaceholder')}
                 className="textarea-input"
                 onExpand={() => setExpandedBox('japanese')}
               />
 
               <TextBoxWithExpand
-                label="Ngữ cảnh"
+                label={t('context')}
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
-                placeholder="Nhập ngữ cảnh của câu nói (không bắt buộc)..."
+                placeholder={t('contextPlaceholder')}
                 className="textarea-input textarea-context"
                 onExpand={() => setExpandedBox('context')}
               />
@@ -246,12 +243,11 @@ function Translate() {
                 {isTranslating ? (
                   <>
                     <div className="spinner-small" />
-                    <span>Đang dịch...</span>
+                    <span>{t('translating')}</span>
                   </>
                 ) : (
                   <>
-
-                    <span>Dịch</span>
+                    <span>{t('translate')}</span>
                   </>
                 )}
               </button>
@@ -267,12 +263,12 @@ function Translate() {
                 {isTranslating ? (
                   <>
                     <div className="spinner-small" />
-                    <span>Đang dịch...</span>
+                    <span>{t('translating')}</span>
                   </>
                 ) : (
                   <>
                     <ArrowLeftRight className="translate-icon" />
-                    <span>Dịch</span>
+                    <span>{t('translate')}</span>
                   </>
                 )}
               </button>
@@ -281,20 +277,20 @@ function Translate() {
             {/* Right Side - Vietnamese Output */}
             <div className="output-group">
               <TextBoxWithExpand
-                label="Tiếng Việt"
+                label={t('vietnamese')}
                 value={vietnameseText}
                 onChange={() => { }}
-                placeholder="Kết quả dịch sẽ hiển thị tại đây..."
+                placeholder={t('outputPlaceholder')}
                 className="textarea-output"
                 readOnly={true}
                 onExpand={() => setExpandedBox('vietnamese')}
               />
 
               <TextBoxWithExpand
-                label="Phân tích"
+                label={t('analysis')}
                 value={analysis}
                 onChange={(e) => setAnalysis(e.target.value)}
-                placeholder="Nhập phân tích (không bắt buộc)..."
+                placeholder={t('analysisPlaceholder')}
                 className="textarea-input textarea-context"
                 onExpand={() => setExpandedBox('analysis')}
               />
@@ -305,7 +301,7 @@ function Translate() {
         {/* History Section */}
         <div className="history-section">
           <div className="history-header">
-            <h2>Lịch sử dịch</h2>
+            <h2>{t('translationHistory')}</h2>
             <button
               className="btn-history-toggle"
               onClick={() => setHistoryHidden(!historyHidden)}
@@ -313,12 +309,12 @@ function Translate() {
               {historyHidden ? (
                 <>
                   <Eye className="toggle-icon" />
-                  <span>Hiện</span>
+                  <span>{t('show')}</span>
                 </>
               ) : (
                 <>
                   <EyeOff className="toggle-icon" />
-                  <span>Ẩn</span>
+                  <span>{t('hide')}</span>
                 </>
               )}
             </button>
@@ -326,9 +322,9 @@ function Translate() {
           {!historyHidden && (
             <>
               {loadingHistory ? (
-                <div className="history-loading">Đang tải lịch sử...</div>
+                <div className="history-loading">{t('loadingHistory')}</div>
               ) : history.length === 0 ? (
-                <div className="history-empty">Chưa có lịch sử dịch</div>
+                <div className="history-empty">{t('noHistory')}</div>
               ) : (
                 <div className="history-list">
                   {history.map((item) => (
@@ -338,7 +334,20 @@ function Translate() {
                       onClick={() => handleHistoryItemClick(item)}
                     >
                       <div className="history-content">
-                        <span className="history-text">{item.originalText}</span>
+                        <div className="history-original">
+                          <span className="history-label">🇯🇵 JP:</span>
+                          <span className="history-text">{item.originalText}</span>
+                        </div>
+                        <div className="history-translated">
+                          <span className="history-label">🇻🇳 VN:</span>
+                          <span className="history-text">{item.translatedText}</span>
+                        </div>
+                        {item.userContext && (
+                          <div className="history-context">
+                            <span className="history-label">📝 Context:</span>
+                            <span className="history-text">{item.userContext.substring(0, 50)}{item.userContext.length > 50 ? '...' : ''}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -352,7 +361,7 @@ function Translate() {
       {/* Expand Popup Modal */}
       {expandedBox === 'japanese' && (
         <ExpandPopup
-          title="Tiếng Nhật"
+          title={t('japanese')}
           value={japaneseText}
           onChange={(e) => setJapaneseText(e.target.value)}
           onClose={() => setExpandedBox(null)}
@@ -360,7 +369,7 @@ function Translate() {
       )}
       {expandedBox === 'context' && (
         <ExpandPopup
-          title="Ngữ cảnh"
+          title={t('context')}
           value={context}
           onChange={(e) => setContext(e.target.value)}
           onClose={() => setExpandedBox(null)}
@@ -368,7 +377,7 @@ function Translate() {
       )}
       {expandedBox === 'vietnamese' && (
         <ExpandPopup
-          title="Tiếng Việt"
+          title={t('vietnamese')}
           value={vietnameseText}
           onChange={() => { }}
           onClose={() => setExpandedBox(null)}
@@ -377,7 +386,7 @@ function Translate() {
       )}
       {expandedBox === 'analysis' && (
         <ExpandPopup
-          title="Phân tích"
+          title={t('analysis')}
           value={analysis}
           onChange={(e) => setAnalysis(e.target.value)}
           onClose={() => setExpandedBox(null)}
