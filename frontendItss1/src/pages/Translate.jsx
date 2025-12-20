@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeftRight, LogOut, Maximize2, X, Sun, Moon, Eye, EyeOff } from 'lucide-react';
 import { translationAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
+import ProfileDropdown from '../components/ProfileDropdown';
 import './Translate.css';
 
 // Popup Modal Component
@@ -92,7 +93,7 @@ function Translate() {
   const [expandedBox, setExpandedBox] = useState(null); // 'japanese' | 'context' | 'vietnamese' | 'analysis' | null
   const [historyHidden, setHistoryHidden] = useState(false);
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const loadHistory = async () => {
