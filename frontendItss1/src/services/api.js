@@ -65,7 +65,6 @@ export const authAPI = {
     api.post('/api/auth/login', { email, password }),
 
   googleLogin: () => {
-    sessionStorage.setItem('preLoginUrl', window.location.pathname);
     window.location.href = `${API_BASE_URL}/oauth2/authorize/google`;
   },
 
