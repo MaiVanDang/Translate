@@ -1,8 +1,8 @@
 // src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
+const API_BASE_URL = 'https://translate-production-6a99.up.railway.app';
+// const API_BASE_URL = 'http://localhost:8080';
 // Tạo axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
