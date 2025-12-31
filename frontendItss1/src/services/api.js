@@ -65,11 +65,11 @@ export const authAPI = {
     api.post('/api/auth/login', { email, password }),
 
   googleLogin: () => {
-    window.location.href = `${API_BASE_URL}/oauth2/authorize/google`;
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
   },
 
   facebookLogin: () => {
-    window.location.href = `${API_BASE_URL}/oauth2/authorize/facebook`;
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/facebook`;
   },
 
   checkEmail: (email) =>
