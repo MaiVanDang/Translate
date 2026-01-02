@@ -169,7 +169,6 @@ const translations = {
         confirmPassword: 'パスワード確認',
         cancel: 'キャンセル',
         save: '保存',
-<<<<<<< HEAD
 
         // Login Error Messages
         loginError: 'ログインに失敗しました。メールアドレスとパスワードを確認してください。',
@@ -192,8 +191,7 @@ const translations = {
         goBack: '戻る',
         processing: '処理中...',
         resetPassword: 'パスワードをリセット',
-=======
->>>>>>> a88f2f9634de0ac92d9e6c491174b25f83b9fd0d
+
     },
     en: {
         // Header
