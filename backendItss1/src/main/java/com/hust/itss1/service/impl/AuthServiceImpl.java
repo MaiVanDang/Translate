@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
             // Kiểm tra nếu là tài khoản OAuth2
             User user = userRepository.findByEmail(request.getEmail()).orElse(null);
             if (user != null && user.getProviderId() != null && !user.getProviderId().isEmpty()) {
-                return new EmailCheckResponse(false, "Tài khoản này đăng nhập qua Google/Facebook, không thể đặt lại mật khẩu.");
+                return new EmailCheckResponse(false, "Tài khoản này đăng nhập qua Google, không thể đặt lại mật khẩu.");
             }
             return new EmailCheckResponse(true, "Email tồn tại trong hệ thống.");
         } else {
@@ -96,9 +96,9 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Kiểm tra nếu là tài khoản OAuth2 (Google/Facebook)
+        // Kiểm tra nếu là tài khoản OAuth2 (Google)
         if (user.getProviderId() != null && !user.getProviderId().isEmpty()) {
-            return new MessageResponse("Error: Tài khoản đăng nhập qua Google/Facebook không thể đặt lại mật khẩu.");
+            return new MessageResponse("Error: Tài khoản đăng nhập qua Google không thể đặt lại mật khẩu.");
         }
 
         // Kiểm tra mật khẩu mới và xác nhận mật khẩu có khớp không
@@ -119,9 +119,9 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Kiểm tra nếu là tài khoản OAuth2 (Google/Facebook)
+        // Kiểm tra nếu là tài khoản OAuth2 (Google)
         if (user.getProviderId() != null && !user.getProviderId().isEmpty()) {
-            return new MessageResponse("Error: Tài khoản đăng nhập qua Google/Facebook không thể đổi mật khẩu.");
+            return new MessageResponse("Error: Tài khoản đăng nhập qua Google không thể đổi mật khẩu.");
         }
 
         // Kiểm tra mật khẩu mới và xác nhận mật khẩu có khớp không

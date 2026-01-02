@@ -68,10 +68,6 @@ export const authAPI = {
     window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
   },
 
-  facebookLogin: () => {
-    window.location.href = `${API_BASE_URL}/oauth2/authorization/facebook`;
-  },
-
   checkEmail: (email) =>
     api.post('/api/auth/check-email', { email }),
 

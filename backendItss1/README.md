@@ -4,7 +4,6 @@
 - ✅ Đăng ký với **email + password**
 - ✅ Đăng nhập với **email + password** → Trả về JWT token
 - ✅ Đăng nhập qua **Google OAuth2**
-- ✅ Đăng nhập qua **Facebook OAuth2**
 - ✅ Đổi mật khẩu
 - ✅ Lưu lịch sử dịch của người dùng
 - ✅ Password encryption với BCrypt
@@ -67,8 +66,7 @@ src/main/java/com/hust/itss1/
 │       ├── OAuth2AuthenticationFailureHandler.java
 │       ├── OAuth2UserInfo.java
 │       ├── OAuth2UserInfoFactory.java
-│       ├── GoogleOAuth2UserInfo.java
-│       └── FacebookOAuth2UserInfo.java
+│       └── GoogleOAuth2UserInfo.java
 ├── service/
 │   ├── AuthService.java
 │   ├── GeminiService.java
@@ -169,7 +167,7 @@ Content-Type: application/json
 }
 // hoặc
 {
-  "message": "Error: Tài khoản đăng nhập qua Google/Facebook không thể đổi mật khẩu."
+  "message": "Error: Tài khoản đăng nhập qua Google không thể đổi mật khẩu."
 }
 ```
 
@@ -180,7 +178,7 @@ Content-Type: application/json
 }
 ```
 
-**⚠️ Lưu ý:** Tài khoản đăng nhập qua Google/Facebook không thể đổi mật khẩu.
+**⚠️ Lưu ý:** Tài khoản đăng nhập qua Google không thể đổi mật khẩu.
 
 ### 3.1. Quên mật khẩu - Kiểm tra Email
 
@@ -205,7 +203,7 @@ Content-Type: application/json
 ```json
 {
   "exists": false,
-  "message": "Tài khoản này đăng nhập qua Google/Facebook, không thể đặt lại mật khẩu."
+  "message": "Tài khoản này đăng nhập qua Google, không thể đặt lại mật khẩu."
 }
 ```
 
@@ -244,7 +242,7 @@ Content-Type: application/json
 }
 // hoặc
 {
-  "message": "Error: Tài khoản đăng nhập qua Google/Facebook không thể đặt lại mật khẩu."
+  "message": "Error: Tài khoản đăng nhập qua Google không thể đặt lại mật khẩu."
 }
 // hoặc
 {
@@ -252,12 +250,11 @@ Content-Type: application/json
 }
 ```
 
-**⚠️ Lưu ý:** Tài khoản đăng nhập qua Google/Facebook không thể đặt lại mật khẩu.
+**⚠️ Lưu ý:** Tài khoản đăng nhập qua Google không thể đặt lại mật khẩu.
 
 ### 4. OAuth2 Login
 
 - **Google**: `GET /oauth2/authorize/google`
-- **Facebook**: `GET /oauth2/authorize/facebook`
 
 Sau khi đăng nhập thành công, người dùng sẽ được redirect về:
 ```
@@ -367,7 +364,6 @@ cp src/main/resources/application-example.properties src/main/resources/applicat
 Cập nhật các giá trị trong `application.properties`:
 - Database username/password
 - Google OAuth2 client-id/client-secret
-- Facebook OAuth2 client-id/client-secret
 - Gemini API key
 - JWT secret key
 
@@ -393,13 +389,6 @@ openssl rand -base64 64
 2. Tạo OAuth 2.0 Client ID
 3. Redirect URI: `http://localhost:8080/oauth2/callback/google`
 4. Update `application.properties`
-
-#### Facebook OAuth2
-1. Vào [Facebook Developers](https://developers.facebook.com/)
-2. Tạo App → Settings → Basic
-3. Valid OAuth Redirect URIs: `http://localhost:8080/oauth2/callback/facebook`
-4. **Quan trọng**: Xóa Server IP Allowlist nếu có (Settings → Basic)
-5. Update `application.properties`
 
 ### 5. Gemini API
 1. Vào [Google AI Studio](https://makersuite.google.com/app/apikey)
@@ -474,14 +463,6 @@ server.port=8081
 - Token đã hết hạn (24h) → login lại
 - Secret key không đúng
 - Token format sai → phải là `Bearer <token>`
-
-### Lỗi OAuth2: "redirect_uri_mismatch"
-- Đảm bảo redirect URI trong Google/Facebook console phải là: `http://localhost:8080/oauth2/callback/{provider}`
-
-### Lỗi Facebook: "This IP can't make requests for that application"
-- Vào Facebook Developer Console → Settings → Basic
-- Xóa tất cả IP trong "Server IP Allowlist"
-
 ---
 
 ## 📝 Database Schema
@@ -492,7 +473,7 @@ server.port=8081
 | id | BIGINT | Primary key, auto increment |
 | email | VARCHAR | Unique, not null |
 | password | VARCHAR | BCrypt encoded |
-| provider_id | VARCHAR | OAuth2 provider ID (Google/Facebook) |
+| provider_id | VARCHAR | OAuth2 provider ID (Google) |
 
 ### Translation History Table
 | Column | Type | Description |

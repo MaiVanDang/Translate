@@ -25,10 +25,7 @@ function OAuth2Redirect() {
 
       // Xác định provider dựa trên email
       let provider = 'email'; // default
-      if (email && email.includes('@facebook.com')) {
-        displayName = email.split('@')[0];
-        provider = 'facebook';
-      } else if (email && email.includes('@gmail.com')) {
+      if (email && email.includes('@gmail.com')) {
         provider = 'google';
       }
 

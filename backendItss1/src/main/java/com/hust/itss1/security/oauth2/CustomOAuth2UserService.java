@@ -47,14 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
 
         if (!StringUtils.hasText(email)) {
-            // Nếu Facebook không trả về email, sử dụng tên người dùng + @facebook.com
-            if (registrationId.equalsIgnoreCase("facebook")) {
-                String name = oAuth2UserInfo.getName();
-                String identifier = StringUtils.hasText(name) ? name : oAuth2UserInfo.getId();
-                email = identifier + "@facebook.com";
-            } else {
-                throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
-            }
+            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
         final String finalEmail = email;

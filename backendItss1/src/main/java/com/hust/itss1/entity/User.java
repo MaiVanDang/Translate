@@ -25,7 +25,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // Provider ID dùng cho OAuth2 (Google/Facebook ID)
     @Column(name = "provider_id")
     private String providerId;
 }

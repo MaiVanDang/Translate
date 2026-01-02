@@ -27,7 +27,6 @@ const translations = {
         signupNow: 'Đăng ký ngay',
         or: 'HOẶC',
         loginWithGoogle: 'Đăng nhập với Google',
-        loginWithFacebook: 'Đăng nhập với Facebook',
 
         // Signup
         signup: 'Đăng ký',
@@ -119,7 +118,6 @@ const translations = {
         signupNow: '今すぐ登録',
         or: 'または',
         loginWithGoogle: 'Googleでログイン',
-        loginWithFacebook: 'Facebookでログイン',
 
         // Signup
         signup: '登録',
@@ -212,7 +210,6 @@ const translations = {
         signupNow: 'Sign up now',
         or: 'OR',
         loginWithGoogle: 'Login with Google',
-        loginWithFacebook: 'Login with Facebook',
 
         // Signup
         signup: 'Sign Up',

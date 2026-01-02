@@ -18,7 +18,7 @@ function ChangePasswordModal({ onClose }) {
 
     // Kiểm tra OAuth2 account
     const loginMethod = localStorage.getItem('loginMethod') || user?.provider || 'email';
-    const isOAuth2Account = loginMethod === 'google' || loginMethod === 'facebook';
+    const isOAuth2Account = loginMethod === 'google';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,7 +27,7 @@ function ChangePasswordModal({ onClose }) {
 
         // Kiểm tra OAuth2 account
         if (isOAuth2Account) {
-            setError('Tài khoản đăng nhập qua Google/Facebook không thể đổi mật khẩu.');
+            setError('Tài khoản đăng nhập qua Google không thể đổi mật khẩu.');
             return;
         }
 
@@ -77,7 +77,7 @@ function ChangePasswordModal({ onClose }) {
                         {/* OAuth2 Account Warning */}
                         {isOAuth2Account && (
                             <div className="info-message">
-                                ℹ️ Tài khoản đăng nhập qua {loginMethod === 'google' ? 'Google' : 'Facebook'} được quản lý bởi {loginMethod === 'google' ? 'Google' : 'Facebook'}. Bạn không thể đổi mật khẩu tại đây.
+                                ℹ️ Tài khoản đăng nhập qua Google được quản lý bởi Google. Bạn không thể đổi mật khẩu tại đây.
                             </div>
                         )}
 

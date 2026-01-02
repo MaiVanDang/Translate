@@ -18,7 +18,7 @@ function ProfileDropdown() {
 
     // Kiểm tra xem có phải tài khoản OAuth2 không
     const loginMethod = localStorage.getItem('loginMethod') || user?.provider || 'email';
-    const isOAuth2Account = loginMethod === 'google' || loginMethod === 'facebook';
+    const isOAuth2Account = loginMethod === 'google';
 
     // Close dropdown when clicking outside
     useEffect(() => {

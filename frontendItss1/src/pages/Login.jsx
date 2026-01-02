@@ -52,10 +52,6 @@ function Login() {
     authAPI.googleLogin();
   };
 
-  const handleFacebookLogin = () => {
-    authAPI.facebookLogin();
-  };
-
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setForgotPasswordLoading(true);
@@ -182,9 +178,6 @@ function Login() {
         <div className="oauth-buttons">
           <button onClick={handleGoogleLogin} className="btn-google">
             <span>🔍</span> {t('loginWithGoogle')}
-          </button>
-          <button onClick={handleFacebookLogin} className="btn-facebook">
-            <span>📘</span> {t('loginWithFacebook')}
           </button>
         </div>
 
