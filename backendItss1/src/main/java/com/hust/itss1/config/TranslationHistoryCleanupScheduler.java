@@ -17,19 +17,15 @@ import java.time.LocalDateTime;
 public class TranslationHistoryCleanupScheduler {
     private final TranslationHistoryService translationHistoryService;
 
-    @Value("${app.translation-history.retention-days:30}")
-    private int retentionDays;
+    @Value("${app.translation-history.retention-seconds:1800}")
+    private int retentionSeconds;
 
     @Value("${app.translation-history.cleanup-batch-size:1000}")
     private int batchSize;
 
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(cron = "${app.translation-history.cleanup-cron:*/10 * * * * *}")
     public void cleanOldTranslationHistories() {
-        log.info("Bắt đầu scheduled job xóa lịch sử dịch cũ hơn {} ngày", retentionDays);
-
-        LocalDateTime cutoff = LocalDateTime.now().minusDays(retentionDays);
+        LocalDateTime cutoff = LocalDateTime.now().minusSeconds(retentionSeconds);
         long deletedCount = translationHistoryService.deleteOldTranslationHistories(cutoff, batchSize);
-
-        log.info("Scheduled job hoàn thành: đã xóa {} bản ghi lịch sử dịch", deletedCount);
     }
 }

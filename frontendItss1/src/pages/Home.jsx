@@ -18,7 +18,6 @@ function Home() {
                     >
                         <option value="vi">🇻🇳 Tiếng Việt</option>
                         <option value="ja">🇯🇵 日本語</option>
-                        <option value="en">🇬🇧 English</option>
                     </select>
                 </div>
             </header>

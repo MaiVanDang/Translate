@@ -28,29 +28,21 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Không xóa error ngay lập tức, chỉ set loading
     setLoading(true);
 
     try {
       const response = await authAPI.login(email, password);
       const { token, email: userEmail, id, roles } = response.data;
-
-      // Xóa error khi đăng nhập thành công
       setError('');
-
-      // Lưu loginMethod để phân biệt với OAuth2
       localStorage.setItem('loginMethod', 'email');
 
-      // Lưu thông tin user và token với provider
       login({ id, email: userEmail, roles, provider: 'email' }, token);
 
-      // Đợi một chút để đảm bảo state được update
       setTimeout(() => {
-        // Chuyển đến trang dịch
         navigate('/translate');
       }, 100);
     } catch (err) {
-      setError(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.');
+      setError(err.response?.data?.message || t('loginError'));
     } finally {
       setLoading(false);
     }
@@ -72,11 +64,10 @@ function Login() {
     try {
       const response = await authAPI.checkEmail(forgotPasswordEmail);
       if (response.data.exists) {
-        // Email tồn tại, hiển thị form nhập mật khẩu mới
         setShowResetPasswordForm(true);
         setForgotPasswordMessage('');
       } else {
-        setForgotPasswordMessage('Email không tồn tại trong hệ thống.');
+        setForgotPasswordMessage(t('emailNotExist'));
       }
     } catch (err) {
       setForgotPasswordMessage(err.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
@@ -89,12 +80,12 @@ function Login() {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setForgotPasswordMessage('Mật khẩu mới và xác nhận mật khẩu không khớp.');
+      setForgotPasswordMessage(t('passwordMismatch'));
       return;
     }
 
     if (newPassword.length < 6) {
-      setForgotPasswordMessage('Mật khẩu phải có ít nhất 6 ký tự.');
+      setForgotPasswordMessage(t('passwordMinLength'));
       return;
     }
 
@@ -103,7 +94,7 @@ function Login() {
 
     try {
       const response = await authAPI.resetPassword(forgotPasswordEmail, newPassword, confirmPassword);
-      setForgotPasswordMessage(response.data.message || 'Đặt lại mật khẩu thành công!');
+      setForgotPasswordMessage(response.data.message || t('resetPasswordSuccess'));
       setNewPassword('');
       setConfirmPassword('');
       setTimeout(() => {
@@ -113,7 +104,7 @@ function Login() {
         setForgotPasswordEmail('');
       }, 2000);
     } catch (err) {
-      setForgotPasswordMessage(err.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+      setForgotPasswordMessage(err.response?.data?.message || t('errorOccurred'));
     } finally {
       setResetPasswordLoading(false);
     }
@@ -207,7 +198,7 @@ function Login() {
         <div className="modal-overlay" onClick={() => setShowForgotPassword(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Quên mật khẩu</h2>
+              <h2>{t('forgotPasswordTitle')}</h2>
               <button
                 className="modal-close-btn"
                 onClick={() => {
@@ -218,7 +209,7 @@ function Login() {
                   setNewPassword('');
                   setConfirmPassword('');
                 }}
-                aria-label="Đóng"
+                aria-label={t('close')}
               >
                 ×
               </button>
@@ -232,7 +223,7 @@ function Login() {
                     id="forgot-email"
                     value={forgotPasswordEmail}
                     onChange={(e) => setForgotPasswordEmail(e.target.value)}
-                    placeholder="Nhập email của bạn"
+                    placeholder={t('enterYourEmail')}
                     required
                     disabled={forgotPasswordLoading}
                   />
@@ -243,31 +234,31 @@ function Login() {
                   </div>
                 )}
                 <button type="submit" className="btn-primary" disabled={forgotPasswordLoading}>
-                  {forgotPasswordLoading ? 'Đang kiểm tra...' : 'Tiếp tục'}
+                  {forgotPasswordLoading ? t('checking') : t('continue')}
                 </button>
               </form>
             ) : (
               <form onSubmit={handleResetPassword}>
                 <div className="form-group">
-                  <label htmlFor="new-password">Mật khẩu mới</label>
+                  <label htmlFor="new-password">{t('newPasswordLabel')}</label>
                   <input
                     type="password"
                     id="new-password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Nhập mật khẩu mới"
+                    placeholder={t('enterNewPassword')}
                     required
                     disabled={resetPasswordLoading}
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="confirm-password">Xác nhận mật khẩu</label>
+                  <label htmlFor="confirm-password">{t('confirmPasswordLabel')}</label>
                   <input
                     type="password"
                     id="confirm-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Nhập lại mật khẩu mới"
+                    placeholder={t('reenterNewPassword')}
                     required
                     disabled={resetPasswordLoading}
                   />
@@ -289,10 +280,10 @@ function Login() {
                     }}
                     disabled={resetPasswordLoading}
                   >
-                    Quay lại
+                    {t('goBack')}
                   </button>
                   <button type="submit" className="btn-primary" disabled={resetPasswordLoading}>
-                    {resetPasswordLoading ? 'Đang xử lý...' : 'Đặt lại mật khẩu'}
+                    {resetPasswordLoading ? t('processing') : t('resetPassword')}
                   </button>
                 </div>
               </form>
