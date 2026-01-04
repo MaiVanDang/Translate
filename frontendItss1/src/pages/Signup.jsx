@@ -38,7 +38,7 @@ function Signup() {
       await authAPI.signup(email, password);
 
       // Đăng ký thành công -> chuyển sang trang login
-      alert('✅ Đăng ký thành công! Vui lòng đăng nhập.');
+      alert('✅ 登録が完了しました。ログインしてください。.');
       navigate('/login');
     } catch (err) {
       setError(err.response?.data?.message || 'Đăng ký thất bại. Email có thể đã tồn tại.');
